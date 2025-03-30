@@ -121,6 +121,14 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
 
         return abs_path
 
+    def _needs_charset(self, filepath: str) -> bool:
+        try:
+            with open(filepath, 'rb') as f:
+                content = f.read()
+                return content.decode('ascii', errors='strict') != content.decode('utf-8')
+        except UnicodeError:
+            return True  # Found non-ASCII symbols
+
     def handle(self) -> None:
         try:
             print(f"Current thread: {threading.current_thread().name}")
@@ -203,7 +211,7 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
         if not mime_type:
             mime_type = "application/octet-stream"
 
-        if mime_type.startswith("text/"):
+        if mime_type.startswith("text/") and self._needs_charset(path):
             mime_type = f"{mime_type}; charset=utf-8"
 
         return mime_type
