@@ -10,10 +10,12 @@ from server.handler import PartialHTTPRequestHandler
 class PartialHTTPServer(socketserver.ThreadingTCPServer):
 
     def __init__(self, server_address, request_handler, document_root, max_workers):
-        super().__init__(server_address, request_handler)
-        self.document_root = os.path.abspath(document_root)
         self.allow_reuse_address = True
         self.allow_reuse_port = True
+
+        super().__init__(server_address, request_handler)
+
+        self.document_root = os.path.abspath(document_root)
         self.thread_pool = ThreadPoolExecutor(max_workers=max_workers)
 
     def process_request(self, request, client_address):
