@@ -102,6 +102,8 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
             sys.exit(1)
 
     def _get_safe_path(self, requested_path: str) -> str:
+        is_dir = requested_path.endswith('/')
+
         # Layer 1: Basic traversal sequence removal
         sanitized_path = requested_path.replace('../', '').replace('..\\', '')
 
@@ -114,6 +116,9 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
             os.path.normpath(self.server.document_root),
             sanitized_path.lstrip('/\\')
         ))
+
+        if is_dir:
+            abs_path = os.path.join(abs_path, '')  # Returning '/' at the end of the path
 
         # Layer 4: Final containment validation
         if not os.path.commonpath([abs_path, self.server.document_root]) == self.server.document_root:
@@ -188,7 +193,7 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
         if os.path.isdir(safe_path) or safe_path.endswith("/"):
             safe_path = os.path.join(safe_path, 'index.html')
             if not os.path.exists(safe_path):
-                self._send_error(HTTP_FORBIDDEN)
+                self._send_error(HTTP_NOT_FOUND)
                 return
 
         with open(safe_path, 'rb') as f:
