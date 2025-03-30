@@ -1,6 +1,7 @@
 import os
 import sys
 import socketserver
+import threading
 import mimetypes
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -122,6 +123,8 @@ class PartialHTTPRequestHandler(socketserver.BaseRequestHandler):
 
     def handle(self) -> None:
         try:
+            print(f"Current thread: {threading.current_thread().name}")
+
             request_data = self.request.recv(RECV_BUFFER_SIZE).decode('utf-8')
             if not request_data:
                 return
