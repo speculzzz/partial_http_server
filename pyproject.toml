@@ -32,7 +32,10 @@ disable = [
     "too-few-public-methods",     # R0903
     "fixme"                       # W0511
 ]
-ignore = [".venv"]
+ignore-paths = [
+    ".venv",
+    "^tests/http-test-suite/"
+]
 
 [tool.pylint.format]
 max-line-length = 120

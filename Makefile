@@ -1,5 +1,6 @@
 ROOT_DIR := www_root
 TEST_SUITE_DIR := tests/http-test-suite/httptest
+HTTP_WORKERS := 260
 
 all: run_server
 
@@ -17,14 +18,14 @@ prepare_www_root:
 .PHONY: run_server
 run_server: prepare_www_root
 	@echo "Starting HTTP server..."
-	@python3 main.py -r ./www_root
+	@python3 main.py -r ./www_root -w ${HTTP_WORKERS}
 
 .PHONY: run_server_from_package
 run_server_from_package: prepare_www_root
 	@echo "Install HTTP server package..."
 	@pip install --no-cache-dir -e .
 	@echo "Starting HTTP server..."
-	@httpd -r ./www_root
+	@httpd -r ./www_root -w ${HTTP_WORKERS}
 
 .PHONY: docker_up
 docker_up:
