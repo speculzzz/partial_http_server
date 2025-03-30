@@ -1,6 +1,12 @@
 ROOT_DIR := www_root
-TEST_SUITE_DIR := tests/http-test-suite/httptest
 HTTP_WORKERS := 260
+
+TEST_CHECKING_URL := http://localhost/httptest/wikipedia_russia.html
+TEST_SUITE_DIR := tests/http-test-suite/httptest
+TEST_SCRIPT := ${TEST_SUITE_DIR}.py
+
+TIMEOUT := 30
+SLEEP_INTERVAL := 2
 
 all: run_server
 
@@ -34,3 +40,32 @@ docker_up:
 .PHONY: docker_down
 docker_down:
 	docker-compose down
+
+.PHONY: test
+test: check_server_available
+	@echo "Running test suite..."
+	@python3 ${TEST_SCRIPT}
+# 	@make docker_down
+
+.PHONY: check_server_available
+check_server_available:
+	@echo "Checking server availability..."
+	@if ! curl -sSf ${TEST_CHECKING_URL} > /dev/null 2>&1 ; then \
+		echo "Server not running, starting docker..."; \
+		make docker_up; \
+		make wait_for_server; \
+	fi
+
+.PHONY: wait_for_server
+wait_for_server:
+	@echo "Waiting for server to become available (max ${TIMEOUT}s)..."
+	@timeout=${TIMEOUT}; \
+	while ! curl -sSf ${TEST_CHECKING_URL} > /dev/null 2>&1 ; do \
+		if [ $$timeout -le 0 ]; then \
+			echo "Timeout: Server did not start in ${TIMEOUT}s"; \
+			exit 1; \
+		fi; \
+		sleep ${SLEEP_INTERVAL}; \
+		timeout=$$((timeout-$(SLEEP_INTERVAL))); \
+	done; \
+	echo "Server is ready"
