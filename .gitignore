@@ -1,0 +1,13 @@
+.idea/
+.pytest_cache
+.ruff_cache/
+venv/
+__pycache__/
+build/
+dist/
+www_root/
+*.egg-info/
+*.pyc
+*.pyo
+*.pyd
+.coverage

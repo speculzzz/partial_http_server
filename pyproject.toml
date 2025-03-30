@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "partial-http-server"
+version = "0.1.0"
+description = "Partial HTTP Server implementation"
+authors = [{name = "speculzzz", email = "speculzzz@gmail.com"}]
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+
+[project.scripts]
+httpd = "server:start_server"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.5",
+    "pytest-cov>=6.0.0",
+    "pylint>=3.3.5",
+]
+
+[tool.setuptools]
+packages = ["server"]
+
+[tool.pylint.master]
+disable = [
+    "missing-module-docstring",   # C0114
+    "missing-class-docstring",    # C0115
+    "missing-function-docstring", # C0116
+    "too-few-public-methods",     # R0903
+    "fixme"                       # W0511
+]
+ignore = [".venv"]
+
+[tool.pylint.format]
+max-line-length = 120
