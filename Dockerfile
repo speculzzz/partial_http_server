@@ -9,6 +9,7 @@ RUN    apt update \
 WORKDIR /app
 
 COPY server/ ./server/
+COPY tests/ ./tests/
 COPY pyproject.toml setup.py ./
 COPY Makefile .
 COPY generate_www_root.sh .

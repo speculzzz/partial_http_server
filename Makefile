@@ -1,12 +1,17 @@
-ROOT_DIR := "www_root"
+ROOT_DIR := www_root
+TEST_SUITE_DIR := tests/http-test-suite/httptest
 
 all: run_server
 
 .PHONY: prepare_www_root
 prepare_www_root:
-	@if [ ! -d "$ROOT_DIR" ] || [ -z "$(find "$ROOT_DIR" -maxdepth 0 -empty)" ]; then \
+	@if [ ! -e "${ROOT_DIR}/index.html" ]; then \
 		echo "Generating ${ROOT_DIR}..."; \
 		bash ./generate_${ROOT_DIR}.sh; \
+	fi
+	@if [ ! -d "${ROOT_DIR}/httptest" ] && [ -d "${TEST_SUITE_DIR}" ]; then \
+		echo "Copy test suite..."; \
+		cp -r ${TEST_SUITE_DIR} ${ROOT_DIR}; \
 	fi
 
 .PHONY: run_server
