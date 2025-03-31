@@ -1,5 +1,5 @@
 ROOT_DIR := www_root
-HTTP_WORKERS := 260
+HTTP_WORKERS := 350
 
 TEST_CHECKING_URL := http://localhost/httptest/wikipedia_russia.html
 TEST_SUITE_DIR := tests/http-test-suite/httptest

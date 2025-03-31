@@ -76,28 +76,23 @@ http://localhost
 * Handlers - Synchronous request handling
 
 ### Load Testing Results (ab -n 50000 -c 100 -r http://localhost/httptest/wikipedia_russia.html):
-| Parameter               | 260 Workers | 600 Workers (updated) |
-|-------------------------|-------------|-----------------------|
-| Requests per second     | 2,863.32    | 866.64                |
-| Average latency         | 34.92 ms    | 115.39 ms             |
-| 95th percentile         | 6 ms        | 6 ms                  |
-| 99th percentile         | 1,046 ms    | 1,031 ms              |
-| Data transferred        | 47.7 GB     | 47.7 GB               |
-| Max latency             | 8,044 ms    | 57,691 ms             |
-
-### Performance Analysis:
-```text
-1. Peak performance: 2,863 RPS (260 workers)
-2. 99% of requests complete under 1.1s
-3. Throughput drops 70% at 600 workers
-4. Consistent 95th percentile latency (6ms)
-```
+| Parameter               | 260 Workers         | 600 Workers         | Delta    |
+|-------------------------|---------------------|---------------------|----------|
+| **Requests per second** | 963.46 RPS         | 1021.18 RPS        | ▲ +6%    |
+| **Avg latency**         | 103.79 ms          | 97.93 ms           | ▼ -5.6%  |
+| **Max latency**         | 7434 ms            | 29872 ms           | ▲ +302%  |
+| **95th percentile**     | 1035 ms            | 1030 ms            | ▼ -0.5%  |
+| **99th percentile**     | 2045 ms            | 1524 ms            | ▼ -25.5% |
+| **Data transferred**    | 47.7 GB            | 47.7 GB            | =        |
+| **Transfer rate**       | 898.5 MB/s         | 952.4 MB/s         | ▲ +6%    |
 
 ### Key Observations:
 ```text
-1. Sweet spot: 200-300 workers
-2. Critical threshold: Performance degrades after 300 workers
-3. Stability: 99% of requests remain under 1.1s even at 600 workers
+1. **Increased productivity** by 6% with 600 workers
+2. **99th percentile improvement** by 25% (2045ms → 1524ms)
+3. **A sharp increase in the maximum delay** (7.4 → 29.9s) indicates:
+   - Periodic blockages under high load
+   - Competition for resources
 ```
 
 ## 🧪 Testing
